@@ -8,18 +8,19 @@ pipeline {
                     branches: [[name: '**/main']], 
                     userRemoteConfigs: [[url: 'https://github.com/monish-suresh/PES1UG22CS361_Jenkins.git']]
                 ])
-            } // <- This was missing! VERY IMPORTANT.
-        } // <- and this one
+            }
+        }
 
         stage('Build') {
             steps {
-                sh 'g++ -o PES1UG22CS361-1 main.cpp' // Compiles C++ file
+                sh 'g++ -o PES1UG22CS361-1 main.cpp || exit 1'  // Compilation will fail if there's an error
+                sh 'exit 1'  // Force failure
             }
         }
 
         stage('Test') {
             steps {
-                sh './PES1UG22CS361-1' // Runs the compiled file
+                sh './PES1UG22CS361-1'  // This won't execute if Build fails
             }
         }
 
@@ -32,7 +33,7 @@ pipeline {
 
     post {
         failure {
-            echo "Pipeline failed" // Post action in case of failure
+            echo "Pipeline failed at the Build stage!"  // Log failure in post actions
         }
     }
 }
