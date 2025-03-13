@@ -2,28 +2,37 @@ pipeline {
     agent any
 
     stages {
+        stage('Clone repository') {
+            steps {
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: '**/main']], 
+                    userRemoteConfigs: [[url: 'https://github.com/monish-suresh/PES1UG22CS361_Jenkins.git']]
+                ])
+            } // <- This was missing! VERY IMPORTANT.
+        } // <- and this one
+
         stage('Build') {
             steps {
-                sh 'ls -la main'  // List files inside 'main' to verify hello.cpp exists
-                sh 'g++ -o main/hello_exec main/hello.cpp'  // Compile hello.cpp from 'main' folder
+                sh 'g++ -o PES1UG22CS361-1 main.cpp' // Compiles C++ file
             }
         }
+
         stage('Test') {
             steps {
-                sh 'chmod +x main/hello_exec'  // Make the executable file runnable
-                sh './main/hello_exec'  // Run the compiled program
+                sh './PES1UG22CS361-1' // Runs the compiled file
             }
         }
+
         stage('Deploy') {
             steps {
-                echo 'Deployment Successful!'
+                echo "Deploying the application..."
             }
         }
     }
 
     post {
         failure {
-            echo 'Pipeline Failed!'
+            echo "Pipeline failed" // Post action in case of failure
         }
     }
 }
