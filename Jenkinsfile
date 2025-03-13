@@ -4,14 +4,14 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'ls -la'  // List files to check if hello.cpp exists
-                sh 'g++ -o hello_exec hello.cpp'  // Compile hello.cpp
+                sh 'ls -la main'  // List files inside 'main' to verify hello.cpp exists
+                sh 'g++ -o main/hello_exec main/hello.cpp'  // Compile hello.cpp from 'main' folder
             }
         }
         stage('Test') {
             steps {
-                sh 'chmod +x hello_exec'  // Ensure it's executable
-                sh './hello_exec'  // Run the compiled program
+                sh 'chmod +x main/hello_exec'  // Make the executable file runnable
+                sh './main/hello_exec'  // Run the compiled program
             }
         }
         stage('Deploy') {
